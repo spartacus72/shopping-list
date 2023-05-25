@@ -8,8 +8,7 @@
  */
 
 /*
-import {onRequest} from "firebase-functions/v2/https";
-import * as logger from "firebase-functions/logger";
+
 */
 
 // Start writing functions
@@ -20,20 +19,19 @@ import * as logger from "firebase-functions/logger";
 //   response.send("Hello from Firebase!");
 // });
 "use strict";
-const mongoose = require("mongoose");
-const { initializeApp } = require("firebase-admin/app");
-const dotenv = require("dotenv");
+import * as logger from "firebase-functions/logger";
+import * as mongoose from "mongoose";
+import { initializeApp } from "firebase-admin/app";
+import * as dotenv from "dotenv";
+import { api as groceryListHandler } from "./functions/grocery-list/index";
 
 initializeApp();
 
 dotenv.config();
 
 mongoose
-  .connect(process.env.DATABASE_URL, {
-    useNewUrlParser: true,
-  })
-  .then(() => console.log("database connected successfully"))
-  .catch((err: any) => console.log("error connecting to mongodb", err));
+  .connect(process.env.DATABASE_URL || "")
+  .then(() => logger.log("database connected successfully"))
+  .catch((err) => logger.log("error connecting to mongodb", err));
 
-exports.grocerylist = require("./functions/grocery-list");
-
+export const grocerylist = groceryListHandler;

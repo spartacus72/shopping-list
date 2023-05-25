@@ -1,8 +1,9 @@
-const { Schema, model } = require("mongoose");
+import { Schema, model } from "mongoose";
 
+// eslint-disable-next-line new-cap
 const grocerySchema = Schema({
   name: String,
   purchased: Number,
 });
 
-module.exports = model("Grocery", grocerySchema);
+export default model("Grocery", grocerySchema);
