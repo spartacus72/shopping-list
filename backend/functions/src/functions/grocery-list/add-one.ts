@@ -1,25 +1,22 @@
 "use strict";
 import { logger } from "firebase-functions";
-import GroceryModel from "../../models/groceryModel";
-import { Request, Response } from "express";
+import { IGroceryItem, GroceryItem } from "../../models/groceryModel";
+import { Request, Response, NextFunction } from "express";
 
-export default async (req: Request, res: Response) => {
-  logger.info("add a new grocery item");
-
+export default async (
+  req: Request,
+  res: Response<IGroceryItem>,
+  next: NextFunction
+) => {
   try {
+    logger.info("add a new grocery item");
+
     const { name } = req.body;
 
-    const groceryItem = new GroceryModel({ name, purchased: false });
+    const groceryItem = new GroceryItem({ name });
 
     res.send(await groceryItem.save());
-  } catch (err) {
-    const error = err as Error;
-    const { code, details } = JSON.parse(JSON.stringify(error));
-    logger.error("An error has occured.", code, details);
-
-    res.status(500).send({
-      status: "error",
-      message: error.message,
-    });
+  } catch (error) {
+    next(error);
   }
 };

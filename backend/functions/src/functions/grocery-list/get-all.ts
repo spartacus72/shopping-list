@@ -1,21 +1,18 @@
 "use strict";
 import { logger } from "firebase-functions";
-import GroceryModel from "../../models/groceryModel";
-import { Request, Response } from "express";
+import { IGroceryItem, GroceryItem } from "../../models/groceryModel";
+import { Request, Response, NextFunction } from "express";
 
-export default async (req: Request, res: Response) => {
-  logger.info("get all grocery items");
-
+export default async (
+  _req: Request,
+  res: Response<IGroceryItem[]>,
+  next: NextFunction
+) => {
   try {
-    res.send(await GroceryModel.find());
-  } catch (err) {
-    const error = err as Error;
-    const { code, details } = JSON.parse(JSON.stringify(error));
-    logger.error("An error has occured.", code, details);
+    logger.info("get all grocery items");
 
-    res.status(500).send({
-      status: "error",
-      message: error.message,
-    });
+    res.send(await GroceryItem.find());
+  } catch (error) {
+    next(error);
   }
 };
