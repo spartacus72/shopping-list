@@ -1,9 +1,8 @@
 import * as mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { describe, expect, beforeAll, afterAll, it } from "@jest/globals";
-import { GroceryItem } from '../models/groceryModel';
-import {addOne, getAll, purchaseOne} from "../service/groceryListService";
-
+import { GroceryItem } from "../models/groceryModel";
+import { addOne, getAll, purchaseOne } from "../service/groceryListService";
 
 describe("Data model tests", () => {
   let con: mongoose.Mongoose;
