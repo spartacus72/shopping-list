@@ -1,7 +1,8 @@
 "use strict";
 import { logger } from "firebase-functions";
-import { IGroceryItem, GroceryItem } from "../../models/groceryModel";
+import { IGroceryItem } from "../../models/groceryModel";
 import { Request, Response, NextFunction } from "express";
+import { purchaseOne } from "../../service/groceryListService";
 
 export default async (
   req: Request,
@@ -13,13 +14,7 @@ export default async (
 
     const { id } = req.params;
 
-    const groceryItem = await GroceryItem.findByIdAndUpdate(
-      { _id: id },
-      { purchased: true },
-      {
-        new: true,
-      }
-    );
+    const groceryItem = await purchaseOne(id);
 
     res.send(groceryItem as IGroceryItem);
   } catch (error) {
