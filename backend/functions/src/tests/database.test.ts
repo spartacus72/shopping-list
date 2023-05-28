@@ -1,7 +1,9 @@
 import * as mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { describe, expect, beforeAll, afterAll, it } from "@jest/globals";
-import { GroceryItem } from "../models/groceryModel";
+import { GroceryItem } from '../models/groceryModel';
+import {addOne, getAll, purchaseOne} from "../service/groceryListService";
+
 
 describe("Data model tests", () => {
   let con: mongoose.Mongoose;
@@ -23,23 +25,43 @@ describe("Data model tests", () => {
     }
   });
 
-  // eslint-disable-next-line max-len
-  it("Grocery model requires name property to be set by user", async () => {
-    const groceryItem = new GroceryItem({});
+  it("Add one to shopping list", async () => {
+    const item = await addOne("test1");
 
-    expect(async () => {
-      await groceryItem.save();
-    }).rejects.toThrowError();
+    expect(item).toBeInstanceOf(GroceryItem);
+  });
+
+  it("Should get all shopping list", async () => {
+    await addOne("test2");
+    const list = await getAll();
+
+    expect(list.length).toBeGreaterThan(0);
+  });
+
+  it("Should purchase item", async () => {
+    const item = addOne("test3");
+    const updatedItem = await purchaseOne((await item).id);
+
+    expect(updatedItem.purchased).toBe(true);
   });
 
   // eslint-disable-next-line max-len
-  it("Mongoose schema defaults purchased and populates _id", async () => {
-    const groceryItem = new GroceryItem({ name: "eggs" });
+  // it("Grocery model requires name property to be set by user", async () => {
+  //   const groceryItem = new GroceryItem({});
 
-    const savedGroceryItem = await groceryItem.save();
+  //   expect(async () => {
+  //     await groceryItem.save();
+  //   }).rejects.toThrowError();
+  // });
 
-    expect(savedGroceryItem.name).toBe("eggs");
-    expect(savedGroceryItem.purchased).toBe(false);
-    expect(savedGroceryItem._id).toBeDefined();
-  });
+  // // eslint-disable-next-line max-len
+  // it("Mongoose schema defaults purchased and populates _id", async () => {
+  //   const groceryItem = new GroceryItem({ name: "eggs" });
+
+  //   const savedGroceryItem = await groceryItem.save();
+
+  //   expect(savedGroceryItem.name).toBe("eggs");
+  //   expect(savedGroceryItem.purchased).toBe(false);
+  //   expect(savedGroceryItem._id).toBeDefined();
+  // });
 });

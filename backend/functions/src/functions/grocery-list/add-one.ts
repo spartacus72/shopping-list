@@ -1,7 +1,8 @@
 "use strict";
 import { logger } from "firebase-functions";
-import { IGroceryItem, GroceryItem } from "../../models/groceryModel";
+import { IGroceryItem } from "../../models/groceryModel";
 import { Request, Response, NextFunction } from "express";
+import { addOne } from "../../service/groceryListService";
 
 export default async (
   req: Request,
@@ -12,10 +13,7 @@ export default async (
     logger.info("add a new grocery item");
 
     const { name } = req.body;
-
-    const groceryItem = new GroceryItem({ name });
-
-    res.send(await groceryItem.save());
+    res.send(await addOne(name));
   } catch (error) {
     next(error);
   }
