@@ -11,9 +11,7 @@ export interface IGroceryListRepository {
   ): Promise<IGroceryItem>;
 }
 
-// eslint-disable-next-line new-cap
 @Service()
-// eslint-disable-next-line require-jsdoc
 export class GroceryListRepository implements IGroceryListRepository {
   addOne = async (name: string): Promise<IGroceryItem> => {
     const groceryItem = new GroceryItem({ name });

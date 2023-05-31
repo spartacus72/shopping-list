@@ -20,11 +20,11 @@ export interface IGroceryListController {
     res: Response<IGroceryItem>,
     next: NextFunction
   ): Promise<void>;
-};
+}
 
 @Service()
 export class GroceryListController implements IGroceryListController {
-  constructor(public groceryListService: GroceryListService) {}
+  constructor(private groceryListService: GroceryListService) {}
 
   addOne = async (
     req: Request,
@@ -61,11 +61,11 @@ export class GroceryListController implements IGroceryListController {
     next: NextFunction
   ): Promise<void> => {
     try {
-      logger.info("purchase a grocery item");
+      const {id} = req.params;
+      
+      logger.info("purchase a grocery item", id);
 
-      const { id } = req.params;
-
-      const groceryItem = await this.groceryListService.purchaseOne(Number(id));
+      const groceryItem = await this.groceryListService.purchaseOne(id);
 
       res.send(groceryItem as IGroceryItem);
     } catch (error) {

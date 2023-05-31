@@ -6,13 +6,12 @@ import { GroceryListRepository } from "../repositories/groceryListRepository";
 export interface IGroceryListService {
   addOne(name: string): Promise<IGroceryItem>;
   getAll(): Promise<IGroceryItem[]>;
-  purchaseOne(id: number): Promise<IGroceryItem>;
+  purchaseOne(id: unknown): Promise<IGroceryItem>;
 }
 
-// eslint-disable-next-line new-cap
 @Service()
 export class GroceryListService implements IGroceryListService {
-  constructor(public groceryListRepo: GroceryListRepository) {}
+  constructor(private groceryListRepo: GroceryListRepository) {}
 
   /**
    * add a single grocery item.
@@ -36,7 +35,7 @@ export class GroceryListService implements IGroceryListService {
    * @param {number} id The id of the purchased item.
    * @return {Promise<IGroceryItem>} The updated grocery item.
    */
-  purchaseOne = async (id: number): Promise<IGroceryItem> => {
+  purchaseOne = async (id: unknown): Promise<IGroceryItem> => {
     return await this.groceryListRepo.update(id, { purchased: true });
   };
 }

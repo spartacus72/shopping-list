@@ -5,13 +5,15 @@ import * as express from "express";
 import * as cors from "cors";
 import errorHandler from "../errorHandler";
 
-export interface IGroceryListRoutes {}
+export interface IGroceryListRoutes {
+  app: express.Express;
+}
 
 @Service()
 export class GroceryListRoutes implements IGroceryListRoutes {
-  router: express.Router;
+  private router: express.Router;
   app: express.Express;
-  constructor(public groceryListController: GroceryListController) {
+  constructor(private groceryListController: GroceryListController) {
     this.router = express.Router();
 
     this.router.get("/", this.groceryListController.getAll);
