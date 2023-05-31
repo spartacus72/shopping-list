@@ -1,23 +1,42 @@
-import { IGroceryItem, GroceryItem } from "../models/groceryModel";
+/* eslint-disable require-jsdoc */
+import { IGroceryItem } from "../models/groceryModel";
+import { Service } from "typedi";
+import { IGroceryListRepository } from "../repositories/groceryListRepository";
 
-const addOne = async (name: string) => {
-  const groceryItem = new GroceryItem({ name });
-  return await groceryItem.save();
-};
+export interface IGroceryListService {
+  addOne(name: string): Promise<IGroceryItem>;
+  getAll(): Promise<IGroceryItem[]>;
+  purchaseOne(id: number): Promise<IGroceryItem>;
+}
 
-const getAll = async () => {
-  return await GroceryItem.find();
-};
+// eslint-disable-next-line new-cap
+@Service()
+export class GroceyListService implements IGroceryListService {
+  constructor(public groceryListRepo: IGroceryListRepository) {}
 
-const purchaseOne = async (id: any) => {
-  const groceryItem = await GroceryItem.findByIdAndUpdate(
-    { _id: id },
-    { purchased: true },
-    {
-      new: true,
-    }
-  );
-  return groceryItem as IGroceryItem;
-};
+  /**
+   * add a single grocery item.
+   * @param {string} name The name of the new item.
+   * @return {Promise<IGroceryItem>} The newly created grocery item.
+   */
+  addOne = async (name: string): Promise<IGroceryItem> => {
+    return await this.groceryListRepo.addOne(name);
+  };
 
-export { addOne, getAll, purchaseOne };
+  /**
+   * return all grovery items.
+   * @return {Promise<IGroceryItem[]>} All grocery items.
+   */
+  getAll = async (): Promise<IGroceryItem[]> => {
+    return await this.groceryListRepo.getAll();
+  };
+
+  /**
+   * mark one item as purchased.
+   * @param {number} id The id of the purchased item.
+   * @return {Promise<IGroceryItem>} The updated grocery item.
+   */
+  purchaseOne = async (id: number): Promise<IGroceryItem> => {
+    return await this.groceryListRepo.update(id, { purchased: true });
+  };
+}

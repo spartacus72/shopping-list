@@ -23,7 +23,10 @@ import * as logger from "firebase-functions/logger";
 import * as mongoose from "mongoose";
 import { initializeApp } from "firebase-admin/app";
 import * as dotenv from "dotenv";
-import { api as groceryListHandler } from "./functions/grocery-list/index";
+import "reflect-metadata";
+import { onRequest } from "firebase-functions/v2/https";
+import { GroceryListRoutes } from "./routes/groceryListRoutes";
+import { Container } from "typedi";
 
 initializeApp();
 
@@ -34,4 +37,5 @@ mongoose
   .then(() => logger.log("database connected successfully"))
   .catch((err) => logger.log("error connecting to mongodb", err));
 
-export const grocerylist = groceryListHandler;
+const groceryListRoutes = Container.get(GroceryListRoutes);
+export const grocerylist = onRequest(groceryListRoutes.app);
