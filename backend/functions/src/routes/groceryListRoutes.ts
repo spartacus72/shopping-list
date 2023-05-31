@@ -1,22 +1,20 @@
 /* eslint-disable require-jsdoc */
 import { Service } from "typedi";
-import { IGroceryListController } from "../controllers/groceyListController";
+import { GroceryListController } from "../controllers/groceyListController";
 import * as express from "express";
 import * as cors from "cors";
 import errorHandler from "../errorHandler";
 
-export interface IGroceryListRputes {}
+export interface IGroceryListRoutes {}
 
-// eslint-disable-next-line new-cap
 @Service()
-// eslint-disable-next-line require-jsdoc
-export class GroceryListRoutes implements IGroceryListRputes {
+export class GroceryListRoutes implements IGroceryListRoutes {
   router: express.Router;
   app: express.Express;
-  constructor(public groceryListController: IGroceryListController) {
+  constructor(public groceryListController: GroceryListController) {
     this.router = express.Router();
 
-    this.router.get("/", groceryListController.getAll);
+    this.router.get("/", this.groceryListController.getAll);
 
     this.router.post("/", groceryListController.addOne);
 

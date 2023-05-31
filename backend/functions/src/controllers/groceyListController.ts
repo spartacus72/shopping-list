@@ -2,7 +2,7 @@ import { Service } from "typedi";
 import { IGroceryItem } from "../models/groceryModel";
 import { Request, Response, NextFunction } from "express";
 import { logger } from "firebase-functions";
-import { IGroceryListService } from "../service/groceryListService";
+import { GroceryListService } from "../service/groceryListService";
 
 export interface IGroceryListController {
   addOne(
@@ -24,7 +24,7 @@ export interface IGroceryListController {
 
 @Service()
 export class GroceryListController implements IGroceryListController {
-  constructor(public groceryListService: IGroceryListService) {}
+  constructor(public groceryListService: GroceryListService) {}
 
   addOne = async (
     req: Request,

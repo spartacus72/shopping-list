@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 import { IGroceryItem } from "../models/groceryModel";
 import { Service } from "typedi";
-import { IGroceryListRepository } from "../repositories/groceryListRepository";
+import { GroceryListRepository } from "../repositories/groceryListRepository";
 
 export interface IGroceryListService {
   addOne(name: string): Promise<IGroceryItem>;
@@ -11,8 +11,8 @@ export interface IGroceryListService {
 
 // eslint-disable-next-line new-cap
 @Service()
-export class GroceyListService implements IGroceryListService {
-  constructor(public groceryListRepo: IGroceryListRepository) {}
+export class GroceryListService implements IGroceryListService {
+  constructor(public groceryListRepo: GroceryListRepository) {}
 
   /**
    * add a single grocery item.
