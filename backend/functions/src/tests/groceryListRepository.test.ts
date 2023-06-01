@@ -25,10 +25,24 @@ describe("Grocery List Repository tests", () => {
     }
   });
 
+  it("returns an empty list of items", async () => {
+    const list = await groceryListRepository.getAll();
+
+    expect(list).toHaveLength(0);
+  });
+
+  it("throws validation error", async () => {
+    const item = groceryListRepository.addOne("");
+
+    await expect(item).rejects.toThrow("Grocery validation failed: name: Path `name` is required.");
+  });
+
   it("Add one to shopping list", async () => {
     const item = await groceryListRepository.addOne("test1");
 
     expect(item).toBeInstanceOf(GroceryItem);
+    expect(item).toHaveProperty("_id");
+    expect(item.purchased).toBe(false);
   });
 
   it("Should get all shopping list", async () => {
