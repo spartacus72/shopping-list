@@ -13,16 +13,19 @@ export interface IGroceryListRepository {
 
 @Service()
 export class GroceryListRepository implements IGroceryListRepository {
-  addOne = async (name: string): Promise<IGroceryItem> => {
+  async addOne(name: string): Promise<IGroceryItem> {
     const groceryItem = new GroceryItem({ name });
     return await groceryItem.save();
-  };
+  }
 
-  getAll = async (): Promise<IGroceryItem[]> => {
+  async getAll(): Promise<IGroceryItem[]> {
     return await GroceryItem.find();
-  };
+  }
 
-  update = async (id: unknown, changes: UpdateQuery<IGroceryItem>) => {
+  async update(
+    id: unknown,
+    changes: UpdateQuery<IGroceryItem>
+  ): Promise<IGroceryItem> {
     const groceryItem = await GroceryItem.findByIdAndUpdate(
       { _id: id },
       changes,
@@ -31,5 +34,5 @@ export class GroceryListRepository implements IGroceryListRepository {
       }
     );
     return groceryItem as IGroceryItem;
-  };
+  }
 }

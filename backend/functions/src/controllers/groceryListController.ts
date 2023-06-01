@@ -1,8 +1,8 @@
-import { Service } from "typedi";
+import { Service, Inject } from "typedi";
 import { IGroceryItem } from "../models/groceryModel";
 import { Request, Response, NextFunction } from "express";
 import { logger } from "firebase-functions";
-import { GroceryListService } from "../service/groceryListService";
+import GroceryListService from "../service/groceryListService";
 
 export interface IGroceryListController {
   addOne(
@@ -23,14 +23,14 @@ export interface IGroceryListController {
 }
 
 @Service()
-export class GroceryListController implements IGroceryListController {
-  constructor(private groceryListService: GroceryListService) {}
+export default class GroceryListController implements IGroceryListController {
+  constructor(@Inject() private groceryListService: GroceryListService) {}
 
-  addOne = async (
+  async addOne(
     req: Request,
     res: Response<IGroceryItem>,
     next: NextFunction
-  ): Promise<void> => {
+  ): Promise<void> {
     try {
       logger.info("add a new grocery item");
 
@@ -39,13 +39,13 @@ export class GroceryListController implements IGroceryListController {
     } catch (error) {
       next(error);
     }
-  };
+  }
 
-  getAll = async (
+  async getAll(
     _req: Request,
     res: Response<IGroceryItem[]>,
     next: NextFunction
-  ): Promise<void> => {
+  ): Promise<void> {
     try {
       logger.info("get all grocery items");
 
@@ -53,16 +53,16 @@ export class GroceryListController implements IGroceryListController {
     } catch (error) {
       next(error);
     }
-  };
+  }
 
-  purchaseOne = async (
+  async purchaseOne(
     req: Request,
     res: Response<IGroceryItem>,
     next: NextFunction
-  ): Promise<void> => {
+  ): Promise<void> {
     try {
-      const {id} = req.params;
-      
+      const { id } = req.params;
+
       logger.info("purchase a grocery item", id);
 
       const groceryItem = await this.groceryListService.purchaseOne(id);
@@ -71,5 +71,5 @@ export class GroceryListController implements IGroceryListController {
     } catch (error) {
       next(error);
     }
-  };
+  }
 }

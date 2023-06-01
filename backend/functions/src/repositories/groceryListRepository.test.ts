@@ -2,18 +2,20 @@ import * as mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { describe, expect, beforeAll, afterAll, it } from "@jest/globals";
 import { GroceryItem } from "../models/groceryModel";
-import { GroceryListRepository } from "../repositories/groceryListRepository";
+import { GroceryListRepository } from "./groceryListRepository";
+import { Container } from "typedi";
 
 describe("Grocery List Repository tests", () => {
   let con: mongoose.Mongoose;
   let mongoServer: MongoMemoryServer;
-  let groceryListRepository = new GroceryListRepository();
+  let groceryListRepository: GroceryListRepository;
 
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     con = await mongoose.connect(mongoServer.getUri(), {
       dbName: "verifyMASTER",
     });
+    groceryListRepository = Container.get(GroceryListRepository);
   });
 
   afterAll(async () => {
@@ -34,7 +36,9 @@ describe("Grocery List Repository tests", () => {
   it("throws validation error", async () => {
     const item = groceryListRepository.addOne("");
 
-    await expect(item).rejects.toThrow("Grocery validation failed: name: Path `name` is required.");
+    await expect(item).rejects.toThrow(
+      "Grocery validation failed: name: Path `name` is required."
+    );
   });
 
   it("Add one to shopping list", async () => {

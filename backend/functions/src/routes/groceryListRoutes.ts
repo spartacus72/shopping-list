@@ -1,6 +1,6 @@
 /* eslint-disable require-jsdoc */
-import { Service } from "typedi";
-import { GroceryListController } from "../controllers/groceyListController";
+import { Service, Inject } from "typedi";
+import GroceryListController from "../controllers/groceryListController";
 import * as express from "express";
 import * as cors from "cors";
 import errorHandler from "../errorHandler";
@@ -10,10 +10,10 @@ export interface IGroceryListRoutes {
 }
 
 @Service()
-export class GroceryListRoutes implements IGroceryListRoutes {
+export default class GroceryListRoutes implements IGroceryListRoutes {
   private router: express.Router;
   app: express.Express;
-  constructor(private groceryListController: GroceryListController) {
+  constructor(@Inject() private groceryListController: GroceryListController) {
     this.router = express.Router();
 
     this.router.get("/", this.groceryListController.getAll);

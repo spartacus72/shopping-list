@@ -1,6 +1,6 @@
 /* eslint-disable require-jsdoc */
 import { IGroceryItem } from "../models/groceryModel";
-import { Service } from "typedi";
+import { Service, Inject } from "typedi";
 import { GroceryListRepository } from "../repositories/groceryListRepository";
 
 export interface IGroceryListService {
@@ -10,32 +10,32 @@ export interface IGroceryListService {
 }
 
 @Service()
-export class GroceryListService implements IGroceryListService {
-  constructor(private groceryListRepo: GroceryListRepository) {}
+export default class GroceryListService implements IGroceryListService {
+  constructor(@Inject() private groceryListRepo: GroceryListRepository) {}
 
   /**
    * add a single grocery item.
    * @param {string} name The name of the new item.
    * @return {Promise<IGroceryItem>} The newly created grocery item.
    */
-  addOne = async (name: string): Promise<IGroceryItem> => {
+  async addOne(name: string): Promise<IGroceryItem> {
     return await this.groceryListRepo.addOne(name);
-  };
+  }
 
   /**
    * return all grovery items.
    * @return {Promise<IGroceryItem[]>} All grocery items.
    */
-  getAll = async (): Promise<IGroceryItem[]> => {
+  async getAll(): Promise<IGroceryItem[]> {
     return await this.groceryListRepo.getAll();
-  };
+  }
 
   /**
    * mark one item as purchased.
    * @param {number} id The id of the purchased item.
    * @return {Promise<IGroceryItem>} The updated grocery item.
    */
-  purchaseOne = async (id: unknown): Promise<IGroceryItem> => {
+  async purchaseOne(id: unknown): Promise<IGroceryItem> {
     return await this.groceryListRepo.update(id, { purchased: true });
-  };
+  }
 }
